@@ -1,0 +1,11 @@
+C:\Users\peter\source\repos\Features\Features\bin\Debug\netcoreapp2.1\Features.deps.json
+C:\Users\peter\source\repos\Features\Features\bin\Debug\netcoreapp2.1\Features.runtimeconfig.json
+C:\Users\peter\source\repos\Features\Features\bin\Debug\netcoreapp2.1\Features.runtimeconfig.dev.json
+C:\Users\peter\source\repos\Features\Features\bin\Debug\netcoreapp2.1\Features.dll
+C:\Users\peter\source\repos\Features\Features\bin\Debug\netcoreapp2.1\Features.pdb
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.csprojAssemblyReference.cache
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.csproj.CoreCompileInputs.cache
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.AssemblyInfoInputs.cache
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.AssemblyInfo.cs
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.dll
+C:\Users\peter\source\repos\Features\Features\obj\Debug\netcoreapp2.1\Features.pdb
