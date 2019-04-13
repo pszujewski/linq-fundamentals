@@ -12,11 +12,14 @@ namespace Cars
         {
             var cars = ProcessFile("fuel.csv");
 
-            var query = cars.OrderByDescending(c => c.Combined);
+            var query = cars
+                .Where(c => c.Manufacturer == "BMW" && c.Year == 2016)
+                .OrderByDescending(c => c.Combined)
+                .Select(c => c);
 
             foreach (var car in query.Take(10))
             {
-                Console.WriteLine($"{car.Name}: {car.Combined}");
+                Console.WriteLine($"{car.Manufacturer} {car.Name}: {car.Combined}");
             }
         }
 
