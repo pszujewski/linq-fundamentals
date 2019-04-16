@@ -688,23 +688,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\peter\\.nuget\\packages\\": {},
+    "C:\\Users\\pszujewski\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\peter\\source\\repos\\Features\\Features\\Features.csproj",
+      "projectUniqueName": "C:\\Users\\pszujewski\\Source\\Repos\\linq-fundamentals\\Features\\Features.csproj",
       "projectName": "Features",
-      "projectPath": "C:\\Users\\peter\\source\\repos\\Features\\Features\\Features.csproj",
-      "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\peter\\source\\repos\\Features\\Features\\obj\\",
+      "projectPath": "C:\\Users\\pszujewski\\Source\\Repos\\linq-fundamentals\\Features\\Features.csproj",
+      "packagesPath": "C:\\Users\\pszujewski\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pszujewski\\Source\\Repos\\linq-fundamentals\\Features\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\pszujewski\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -729,6 +729,7 @@
       "netcoreapp2.1": {
         "dependencies": {
           "Microsoft.NETCore.App": {
+            "suppressParent": "All",
             "target": "Package",
             "version": "[2.1.0, )",
             "autoReferenced": true

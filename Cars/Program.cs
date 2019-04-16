@@ -15,6 +15,8 @@ namespace Cars
 
             GroupJoinCarsIntoManufacturers(cars, manufacturers);
             FindMostFuelEfficientCarsByCountry(cars, manufacturers);
+            Console.WriteLine("=== GET STATS ===");
+            GetStatsByManufacturer(cars, manufacturers);
 
             // Grouping
             var carsByManufacturer =
@@ -130,6 +132,62 @@ namespace Cars
             Console.WriteLine($"");
             Console.WriteLine($"===============================================================");
             Console.WriteLine($"");
+        }
+
+        public static void GetStatsByManufacturer(List<Car> cars, List<Manufacturer> manufacturers)
+        {
+            var query =
+                cars.GroupBy(c => c.Manufacturer)
+                    .Select(g =>
+                    {
+                        // Aggregate the stats for the group of cars
+                        var results = g.Aggregate(new CarStatistics(),
+                                            (acc, c) => acc.Accumulate(c),
+                                            acc => acc.Compute());
+                        return new
+                        {
+                            Name = g.Key,
+                            Avg = results.Average,
+                            results.Min,
+                            results.Max,
+                        };
+                    })
+                    .OrderByDescending(r => r.Max);
+
+            foreach (var group in query)
+            {
+                Console.WriteLine($"{group.Name}: {group.Avg}");
+            }
+        }
+
+        public class CarStatistics
+        {
+            public int Max { get; set; }
+            public int Min { get; set; }
+            public double Average { get; set; }
+            public int Total { get; set; }
+            public int Count { get; set; }
+
+            public CarStatistics()
+            {
+                Max = Int32.MaxValue;
+                Min = Int32.MinValue;
+            }
+
+            public CarStatistics Accumulate(Car c)
+            {
+                Count += 1;
+                Total += c.Combined;
+                Max = Math.Max(Max, c.Combined);
+                Min = Math.Min(Min, c.Combined);
+                return this;
+            }
+
+            public CarStatistics Compute()
+            {
+                Average = Total / Count;
+                return this;
+            }
         }
 
         public static void FindMostFuelEfficientCarsByCountry(List<Car> cars, List<Manufacturer> manufacturers)
