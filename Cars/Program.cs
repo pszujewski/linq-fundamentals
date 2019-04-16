@@ -13,16 +13,67 @@ namespace Cars
             var cars = ProcessFile("fuel.csv");
             var manufacturers = ProcessManufacturers("manufacturers.csv");
 
-            var query = cars
-                .Where(c => c.Manufacturer == "BMW" && c.Year == 2016)
-                .OrderByDescending(c => c.Combined)
-                .Select(c => c);
+            GroupJoinCarsIntoManufacturers(cars, manufacturers);
+            FindMostFuelEfficientCarsByCountry(cars, manufacturers);
+
+            // Grouping
+            var carsByManufacturer =
+                from car in cars
+                group car by car.Manufacturer.ToUpper() into manufacturer
+                orderby manufacturer.Key // By default here, will order in ascending alphabetical order
+                select manufacturer;
+
+            // Same query just in method syntax
+            var carsByManufacturer2 =
+                cars.GroupBy(c => c.Manufacturer.ToUpper())
+                    .OrderBy(g => g.Key); // the key being the manufacturer name
+
+            foreach (var carGroup in carsByManufacturer)
+            {
+                Console.WriteLine("");
+                Console.WriteLine($"{carGroup.Key} group"); // Key is the value I grouped by (i.e Kia)
+                Console.WriteLine($"{carGroup.Key} has {carGroup.Count()} cars.");
+                foreach (var car in carGroup.OrderByDescending(c => c.Combined).Take(2))
+                {
+                    Console.WriteLine($"\t{car.Name} : {car.Combined}");
+                }
+            }
+
+            var querySyntaxExample =
+                from car in cars
+                join manufacturer in manufacturers
+                    on new { car.Manufacturer, car.Year }
+                        equals
+                        new { Manufacturer = manufacturer.Name, manufacturer.Year }
+                orderby car.Combined descending, car.Name ascending
+                select new
+                {
+                    manufacturer.Headquarters,
+                    car.Name,
+                    car.Combined
+                };
+
+            // join 'manufacturers' to 'cars' where c.Manufacturer == m.Name
+            // now we are joining on a composite operator.
+            // and select new anonomyous object projection from the join
+            var query = 
+                cars.Join(manufacturers, 
+                            c => new { c.Manufacturer, c.Year }, // defines how to match a given car to a manufacturer
+                            m => new { Manufacturer = m.Name, m.Year }, // property names must match
+                            (c, m) => new
+                            {
+                                m.Headquarters,
+                                c.Name,
+                                c.Combined,
+                            })
+                    .OrderByDescending(c => c.Combined)
+                    .ThenBy(c => c.Name);
 
             var hasFord = cars.Any(c => c.Manufacturer == "Ford");
 
-            foreach (var car in query.Take(10))
+            foreach (var carSummary in query.Take(10))
             {
-                Console.WriteLine($"{car.Manufacturer} {car.Name}: {car.Combined}");
+                Console.WriteLine($"{carSummary.Name} in {carSummary.Headquarters}: {carSummary.Combined}");
                 
             }
 
@@ -53,6 +104,58 @@ namespace Cars
                 .Where(line => line.Length > 1)
                 .Select(Car.ParseFromCsv)
                 .ToList();
+        }
+
+        public static void GroupJoinCarsIntoManufacturers(List<Car> cars, List<Manufacturer> manufacturers)
+        {
+            var query =
+                from manufacturer in manufacturers
+                join car in cars on manufacturer.Name equals car.Manufacturer
+                    into carGroup
+                select new
+                {
+                    Manufacturer = manufacturer,
+                    Cars = carGroup
+                };
+
+            foreach (var group in query)
+            {
+                Console.WriteLine($"{group.Manufacturer.Name}: {group.Manufacturer.Headquarters}");
+                foreach (var car in group.Cars.OrderByDescending(c => c.Combined).Take(2))
+                {
+                    Console.WriteLine($"\t{car.Name}: {car.Combined}");
+                }
+            }
+
+            Console.WriteLine($"");
+            Console.WriteLine($"===============================================================");
+            Console.WriteLine($"");
+        }
+
+        public static void FindMostFuelEfficientCarsByCountry(List<Car> cars, List<Manufacturer> manufacturers)
+        {
+            // Use a regular 'join' to stictch together a manufacturer with a car and then group those results
+            // and use ordering and Take.
+            var carGroups =
+                manufacturers.Join(cars,
+                                   m => m.Name,
+                                   c => c.Manufacturer,
+                                   (m, c) => new
+                                   {
+                                       Country = m.Headquarters,
+                                       Car = c
+                                   })
+                               .GroupBy(c => c.Country)
+                               .OrderBy(g => g.Key);
+
+            foreach (var carGroup in carGroups)
+            {
+                Console.WriteLine($"Country: {carGroup.Key}");
+                foreach (var container in carGroup.OrderByDescending(cn => cn.Car.Combined).Take(3))
+                {
+                    Console.WriteLine($"\t{container.Car.Name}: {container.Car.Combined}");
+                }
+            }
         }
     }
 
