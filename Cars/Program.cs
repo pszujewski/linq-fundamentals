@@ -10,8 +10,12 @@ namespace Cars
     {
         static void Main(string[] args)
         {
+            CarsConverter converter = new CarsConverter();
+
             var cars = ProcessFile("fuel.csv");
             var manufacturers = ProcessManufacturers("manufacturers.csv");
+
+            converter.ToXML(cars);
 
             GroupJoinCarsIntoManufacturers(cars, manufacturers);
             FindMostFuelEfficientCarsByCountry(cars, manufacturers);
