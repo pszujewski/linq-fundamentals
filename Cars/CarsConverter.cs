@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -8,6 +7,32 @@ namespace Cars
 {
     public class CarsConverter
     {
+        public void InsertAndQueryData(List<Car> records)
+        {
+            // Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CarDb>());
+            InsertData(records);
+            // QueryData();
+        }
+
+        private void QueryData()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void InsertData(List<Car> records)
+        {
+            var db = new CarDb();
+
+            if (!db.Cars.Any())
+            {
+                foreach (var car in records)
+                {
+                    db.Cars.Add(car);
+                }
+                db.SaveChanges();
+            }
+        }
+
         public void ToXML(List<Car> records)
         {
             CreateXML(records);

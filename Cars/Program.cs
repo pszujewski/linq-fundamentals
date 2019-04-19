@@ -15,7 +15,7 @@ namespace Cars
             var cars = ProcessFile("fuel.csv");
             var manufacturers = ProcessManufacturers("manufacturers.csv");
 
-            converter.ToXML(cars);
+            converter.InsertAndQueryData(cars);
 
             GroupJoinCarsIntoManufacturers(cars, manufacturers);
             FindMostFuelEfficientCarsByCountry(cars, manufacturers);
