@@ -1,7 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Xml.Linq;
+
+/*
+    When you use Linq with the Entity Framework, the lambda functions that you 
+    write to filter, order and operate on a given Table in a Database are not compiled
+    into executable (invokable) assemblies, as are regular methods or when you query data in memory
+    against the IEnumerable type. Instead, they are compiled into "Expressions." That describe the function 
+    you wrote (in other words something parsable into an Abstract Syntax Tree). It is parsed into a data structure
+    that describes the func's arguments, it's return type, operations contained within it, etc. This Expression
+    Type can be translated into SQL commands that can be sent to SQL server (remote datasource).
+
+    // for IEnumberable -> compiled into executable code that result in "in-memory" operations
+    Func<int, int> square = x => x * x;
+
+    // For IQueryable Expression -> Entity Framework can inspect this and translate it into SQL commands
+    Expression<Func<int, int, int>> add = (x, y) => x + y;
+
+    "add" cannot be invoked as can "square" but "add" can be parsed and analayzed.
+*/
 
 namespace Cars
 {
@@ -9,14 +28,30 @@ namespace Cars
     {
         public void InsertAndQueryData(List<Car> records)
         {
-            // Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CarDb>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CarDb>());
             InsertData(records);
-            // QueryData();
+            QueryData();
         }
 
         private void QueryData()
         {
-            throw new NotImplementedException();
+            var db = new CarDb();
+
+            db.Database.Log = Console.WriteLine;
+
+            // db.Cars is of type "DbSet" so it implements IQueryable and uses
+            // Entity Framework. The lambdas here are "Expressions" of functions
+            var query =
+                db.Cars.Where(c => c.Manufacturer == "BMW")
+                       .OrderByDescending(c => c.Combined)
+                       .ThenBy(c => c.Name)
+                       .Take(10)
+                       .ToList(); // Executes and returns IEnumerable
+
+            foreach (var car in query)
+            {
+                Console.WriteLine($"{car.Name}: {car.Combined}");
+            }
         }
 
         private void InsertData(List<Car> records)
